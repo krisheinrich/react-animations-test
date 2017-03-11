@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
@@ -5,11 +7,18 @@ module.exports = {
     './src/index.js'
   ],
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loader: 'react-hot-loader!babel-loader'
-    }]
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'react-hot-loader!babel-loader'
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loaders: ['babel-loader', 'eslint-loader']
+      }
+    ]
   },
   resolve: {
     extensions: ['*', '.js', '.jsx']
@@ -22,5 +31,14 @@ module.exports = {
   devServer: {
     contentBase: './dist',
     hot: true
-  }
+  },
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        eslint: {
+          configFile: './.eslintrc'
+        }
+      }
+    })
+  ]
 };
